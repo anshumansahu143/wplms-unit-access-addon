@@ -10,15 +10,39 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
           add_filter('wplms_course_creation_tabs',array($this,'add_number_unit_access_frontend'));
           add_filter('wplms_unit_metabox',array($this,'add_number_of_access'));
           add_action('the_content',array($this,'check_update_user_access_meta'));
+          add_action('plugins_loaded',array($this,'wplms_uaa_translations'));
+          //add_action('wplms_course_retake',array($this,'delete_scorm_data'),10,2);
+          add_action('wplms_course_reset',array($this,'delete_count_data_and_curriculum'),10,2);
         } // END public function __construct
         public function activate(){
         }
         public function deactivate(){
         }
-        
+
+        function delete_count_data_and_curriculum($course_id,$user_id){
+	        if(!empty($course_id) && !empty($user_id)){
+	            global $wpdb;
+	            
+	            $curriculum = bp_course_get_curriculum($course_id);
+	            if(empty($curriculum))
+	                return false;
+
+	            foreach($curriculum as $key => $item){
+	                if(is_numeric($item)){
+	                    global $wpdb;
+	                    $meta_key = 'vibe_unit_access_number'.$item;
+	                    $meta_key2 = 'number_access'.$item;
+
+	                    $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key = {$meta_key} AND user_id = {$user_id}");
+	                    $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key = {$meta_key2} AND user_id = {$user_id}");
+	                }
+	            }
+	        }
+	    }
+
 		function add_number_unit_access_backend($settings){
 		  $settings['vibe_unit_access_number']=array( // Text Input
-		      'label' => __('Number of times user can access course units','vibe-customtypes'), // <label>
+		      'label' => __('Number of times user can access course units','wplms-uaa'), // <label>
 		      'desc'  => '', // description
 		      'id'  => 'vibe_unit_access_number', // field id and name
 		      'type'  => 'number', // type of field
@@ -30,9 +54,9 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
 		function add_number_unit_access_frontend($settings){
 		  $fields = $settings['course_settings']['fields'];
 		  $arr=array(array( // Text Input
-		      'label' => __('Number of times user can access course units','vibe-customtypes'), // <label>
-		      'desc'=> __('Number of times user can access course units','wplms-front-end' ),
-		      'text'=> __('Number of times user can access course units','wplms-front-end' ),
+		      'label' => __('Number of times user can access course units','wplms-uaa'), // <label>
+		      'desc'=> __('Number of times user can access course units','wplms-uaa' ),
+		      'text'=> __('Number of times user can access course units','wplms-uaa' ),
 		      'id'  => 'vibe_unit_access_number', // field id and name
 		      'type'  => 'number', // type of field
 		      'default' => 0
@@ -46,7 +70,7 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
 
 		function add_number_of_access($settings){
 		  $settings['number_access']=array( // Text Input
-		      'label' => __('Number of times user can access this unit','vibe-customtypes'), // <label>
+		      'label' => __('Number of times user can access this unit','wplms-uaa'), // <label>
 		      'desc'  => '', // description
 		      'id'  => 'number_access', // field id and name
 		      'type'  => 'number', // type of field
@@ -93,7 +117,19 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
 		    }
 		    return $content;
 		}
+		function wplms_uaa_translations(){
+	          $locale = apply_filters("plugin_locale", get_locale(), 'wplms-uaa');
+	          $lang_dir = dirname( __FILE__ ) . '/languages/';
+	          $mofile        = sprintf( '%1$s-%2$s.mo', 'wplms-uaa', $locale );
+	          $mofile_local  = $lang_dir . $mofile;
+	          $mofile_global = WP_LANG_DIR . '/plugins/' . $mofile;
 
+	          if ( file_exists( $mofile_global ) ) {
+	              load_textdomain( 'wplms-uaa', $mofile_global );
+	          } else {
+	              load_textdomain( 'wplms-uaa', $mofile_local );
+	          }  
+	    }
        
     } // END class WPLMS_Unit_Addon_Class
 } // END if(!class_exists('WPLMS_Unit_Addon_Class'))
