@@ -11,7 +11,7 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
           add_filter('wplms_unit_metabox',array($this,'add_number_of_access'));
           add_action('the_content',array($this,'check_update_user_access_meta'));
           add_action('plugins_loaded',array($this,'wplms_uaa_translations'));
-          //add_action('wplms_course_retake',array($this,'delete_scorm_data'),10,2);
+          add_action('wplms_course_retake',array($this,'delete_count_data_and_curriculum'),10,2);
           add_action('wplms_course_reset',array($this,'delete_count_data_and_curriculum'),10,2);
         } // END public function __construct
         public function activate(){
@@ -33,8 +33,8 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
 	                    $meta_key = 'vibe_unit_access_number'.$item;
 	                    $meta_key2 = 'number_access'.$item;
 
-	                    $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key = {$meta_key} AND user_id = {$user_id}");
-	                    $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key = {$meta_key2} AND user_id = {$user_id}");
+	                    $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key = '{$meta_key}' AND user_id = {$user_id}");
+	                    $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key = '{$meta_key2}' AND user_id = {$user_id}");
 	                }
 	            }
 	        }
@@ -85,7 +85,7 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
 		      return $content;
 
 		  	if((is_user_logged_in() && current_user_can('manage_options')) || (is_user_logged_in() &&  get_current_user_id()==$post->post_author))
-		  		return $content;
+		  		//return $content;
 		    $course_id=bp_course_get_unit_course_id($id);
 
 		    $user_id=get_current_user_id();
