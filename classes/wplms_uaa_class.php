@@ -42,7 +42,10 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
 	            	$user_id = $this->user->id;
 	            	$course_id = $request['course'];
 	                if(function_exists('bp_course_is_member') && bp_course_is_member($course_id,$this->user->id)){
-	                	 
+	                	if(!isset($return['meta'])){
+	                		$return['meta'] = array();
+	                	}
+	                	$return['meta']['no_cache'] = 1;
 						$course_count= get_post_meta($course_id,'vibe_unit_access_number',true);
 					    $unit_count=get_post_meta($id,'number_access',true);
 					    $count=0;
@@ -176,6 +179,8 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
 		function check_update_user_access_meta($content){
 		    global $post;
 		    $id=$post->ID;
+		    if(empty($id))
+		    	return $content;
 		    if((!empty($id) && get_post_type($id)!='unit') || !is_user_logged_in())
 		      return $content;
 
