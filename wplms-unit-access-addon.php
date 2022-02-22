@@ -32,8 +32,7 @@ include_once 'classes/wplms_uaa_class.php';
 if(class_exists('WPLMS_Unit_Addon_Class'))
 { 
     // Installation and uninstallation hooks
-    register_activation_hook(__FILE__, array('WPLMS_Unit_Addon_Class', 'activate'));
-    register_deactivation_hook(__FILE__, array('WPLMS_Unit_Addon_Class', 'deactivate'));
+    
 
     // instantiate the plugin class
     $wplms_uaa = new WPLMS_Unit_Addon_Class();

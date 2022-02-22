@@ -33,21 +33,25 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
         	$course_id = $request['course'];	
 			$id = $request['id'];	
 			$body = json_decode($request->get_body(),true);
-        
+
 
 	        if(!empty($body['token']) && is_numeric($request['course'])){
 	            
 	            $this->user = apply_filters('vibebp_api_get_user_from_token','',$body['token']);
+
 	            if(!empty($this->user)){
 	            	$user_id = $this->user->id;
 	            	$course_id = $request['course'];
+
 	                if(function_exists('bp_course_is_member') && bp_course_is_member($course_id,$this->user->id)){
+
 	                	if(!isset($return['meta'])){
 	                		$return['meta'] = array();
 	                	}
 	                	$return['meta']['no_cache'] = 1;
 						$course_count= get_post_meta($course_id,'vibe_unit_access_number',true);
 					    $unit_count=get_post_meta($id,'number_access',true);
+
 					    $count=0;
 					    $user_course_unit_count=0;
 					    if(!empty($unit_count)){
@@ -90,7 +94,7 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
         	$setting = array( // Text Input
 		      'label' => __('Number of times user can access course units','wplms-uaa'), // <label>
 		      'desc'  => '', // description
-		      'id'  => 'vibe_unit_access_number', // field id and name
+		      'id'  => 'number_access', // field id and name
 		      'type'  => 'number', // type of field
 		      'std' => 0,
 		      'from'  => 'meta',
