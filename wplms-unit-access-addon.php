@@ -3,7 +3,7 @@
 Plugin Name: WPLMS Unit Access Addon
 Plugin URI: http://www.Vibethemes.com
 Description: A simple WordPress plugin to Restrict access to units 
-Version: 1.0
+Version: 1.1
 Author: vibethemes,alexhal
 Author URI: http://www.vibethemes.com
 License: GPL2
