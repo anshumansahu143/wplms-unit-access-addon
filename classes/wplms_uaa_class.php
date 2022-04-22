@@ -70,13 +70,13 @@ if(!class_exists('WPLMS_Unit_Addon_Class'))
 					    if(!empty($unit_count)  && isset($count) && $count > $unit_count){
 					      $return['content'] =  '<div class="message notice vbp_message" style="margin-bottom:50px">Allowed unit access limit('.$unit_count.') is over .</div>';
 					      
-					      $return['meta'] = array('access'=>0);
+					      $return['meta']['access'] = 0;
 
 					    }elseif(!empty($unit_count) && isset($count) && $count <= $unit_count ){
 					      $return['content'] .=  '<div class="message notice vbp_message" style="margin-bottom:50px">You can access this unit '.($unit_count-$count).' more time(s)</div>';
 					    }elseif(!empty($course_count)  && isset($user_course_unit_count) && $user_course_unit_count > $course_count){
 					      $return['content'] =  '<div class="message notice vbp_message" style="margin-bottom:50px">Allowed unit access limit('.$course_count.') is over .</div>';
-					      $return['meta'] = array('access'=>0);
+					      $return['meta']['access'] = 0;
 					    }elseif(!empty($course_count) && isset($user_course_unit_count) && $user_course_unit_count <= $course_count ){
 					      $return['content'].=  '<div class="message notice vbp_message" style="margin-bottom:50px">You can access this unit '.($course_count-$user_course_unit_count).' more time(s)</div>';
 					    }
